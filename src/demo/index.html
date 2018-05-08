@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>gm-react</title>
+    <link type="text/css" rel="stylesheet" href="style.css"/>
+    <script src="https://cdn.bootcss.com/react/15.4.2/react.min.js"></script>
+    <script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js"></script>
+    <script src="https://cdn.bootcss.com/babel-standalone/6.22.1/babel.min.js"></script>
+    <!--<script src="../../node_modules/gridmanager/js/gm.js"></script>-->
+    <!--<link rel="stylesheet" type="text/css" href="../../node_modules/gridmanager/css/gm.css"/>-->
+    <script src="../js/gm-react.js"></script>
+    <!--<script src="./app.js"></script>-->
+</head>
+<body ng-app="myApp">
+<div class="search-area">
+    <div class="sa-ele">
+        <label class="se-title">名称:</label>
+        <input class="se-con" name="name"/>
+    </div>
+    <div class="sa-ele">
+        <label class="se-title">使用说明:</label>
+        <input class="se-con" name="info"/>
+    </div>
+    <div class="sa-ele">
+        <label class="se-title">url:</label>
+        <input class="se-con" name="url"/>
+    </div>
+    <div class="sa-ele">
+        <button class="search-action">搜索</button>
+        <button class="reset-action">重置</button>
+    </div>
+</div>
+<br/>
+
+<section id="example"></section>
+
+<div class="bottom-bar">
+    <button id="init-gm" disabled>init</button>
+    <button id="destroy-gm" disabled>destroy</button>
+</div>
+<script type="text/babel">
+    var ReactGridManager = React.createClass({
+        render: function () {
+            return <table ref={this.props.option.gridManagerName}></table>;
+        },
+        componentDidMount: function () {
+            var table = this.refs[this.props.option.gridManagerName];
+            table.GM(this.props.option);
+        }
+    });
+    var option = {
+        gridManagerName: 'testReact',
+        height: '400px',
+        columnData: [{
+            key: 'name',
+            remind: 'the name',
+            width: '100px',
+            align: 'right',
+            text: '名称',
+            sorting: ''
+        },{
+            key: 'type',
+            remind: 'the type',
+            text: '分类',
+            isShow: false,
+            template: type => {
+                return `<select>
+                            <option value="1" ${type === 1 ? 'selected="selected"' : ''}>前端框架、插件</option>
+                            <option value="2" ${type === 2 ? 'selected="selected"' : ''}>javaScript相关链接</option>
+                            <option value="3" ${type === 3 ? 'selected="selected"' : ''}>css相关链接</option>
+                            <option value="4" ${type === 4 ? 'selected="selected"' : ''}>html相关链接</option>
+                            <option value="4" ${type === 5 ? 'selected="selected"' : ''}>工具类相关链接</option>
+                            <option value="4" ${type === 6 ? 'selected="selected"' : ''}>其它链接</option>
+                        </select>`;
+            }
+        },{
+            key: 'info',
+            remind: 'the info',
+            isShow: false,
+            text: '使用说明'
+        },{
+            key: 'url',
+            remind: 'the url',
+            text: 'url',
+            // 使用函数返回 dom node
+            template: function(url) {
+                var urlNode = document.createElement('a');
+                urlNode.setAttribute('href', url);
+                urlNode.setAttribute('title', url);
+                urlNode.setAttribute('target', '_blank');
+                urlNode.innerText = url;
+                return urlNode;
+            }
+        },{
+            key: 'createDate',
+            remind: 'the createDate',
+            width: '100px',
+            text: '创建时间',
+            sorting: 'DESC',
+            // 使用函数返回 htmlString
+            template: function(createDate, rowObject){
+                return new Date(createDate).toLocaleDateString();
+            }
+        },{
+            key: 'lastDate',
+            remind: 'the lastDate',
+            width: '100px',
+            text: '最后修改时间',
+            sorting: '',
+            // 使用函数返回 htmlString
+            template: function(lastDate, rowObject){
+                return new Date(lastDate).toLocaleDateString();
+            }
+        },{
+            key: 'action',
+            remind: 'the action',
+            width: '10%',
+            text: '操作',
+            template: function(action, rowObject){
+                return '<span class="plugin-action del-action" row-id="'+rowObject.id+'" onclick="delectRowData(this)">删除</span>';
+            }
+        }],
+        supportRemind: true,
+        isCombSorting:  true,
+        supportAjaxPage: true,
+        supportSorting: true,
+        ajax_url: 'http://www.lovejavascript.com/learnLinkManager/getLearnLinkList',
+        ajax_type: 'POST',
+        query: {pluginId: 1},
+        pageSize: 20
+    };
+    ReactDOM.render(
+        <div>
+            <ReactGridManager
+                option={option}
+            />
+        </div>,
+        document.querySelector('#example')
+    );
+</script>
+</body>
+</html>
