@@ -40,6 +40,7 @@
     <button id="destroy-gm" disabled>destroy</button>
 </div>
 <script type="text/babel">
+    // TODO 20180523: 写在这里生效，而写在index.jsx中不生效
     var ReactGridManager = React.createClass({
         render: function () {
             return <table ref={this.props.option.gridManagerName}></table>;
@@ -47,8 +48,13 @@
         componentDidMount: function () {
             var table = this.refs[this.props.option.gridManagerName];
             table.GM(this.props.option);
+            GM.setScope(table, this);
+        },
+        testGM: function(row) {
+            console.log(row);
         }
     });
+
     var option = {
         gridManagerName: 'testReact',
         height: '400px',
@@ -118,7 +124,7 @@
             width: '10%',
             text: '操作',
             template: function(action, rowObject){
-                return '<span class="plugin-action del-action" row-id="'+rowObject.id+'" onclick="delectRowData(this)">删除</span>';
+                return '<span class="plugin-action edit-action" gm-click="testGM">删除</span>';
             }
         }],
         supportRemind: true,

@@ -13,6 +13,7 @@ export default class ReactGridManager extends Component {
     componentDidMount() {
         var table = this.refs[this.props.option.gridManagerName];
         table.GM(this.props);
+        GM.setScope(table, this);
     }
 }
 
