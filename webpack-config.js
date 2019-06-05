@@ -1,7 +1,10 @@
+const webpack = require('webpack');
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
 const genRules = require('./webpack-common.loader');
 const buildPath = path.join(__dirname, "dist");
+const { version } = require('./package.json');
 
 const config = {
 
@@ -31,13 +34,31 @@ const config = {
 
 	// 以插件形式定制webpack构建过程
 	plugins: [
-		// 将文件复制到构建目录
+        // 将样式文件 抽取至独立文件内
+        new ExtractTextWebpackPlugin({
+            // 生成文件的文件名
+            filename: 'css/gm-react.css',
+
+            // 是否禁用插件
+            disable: false,
+
+            // 是否向所有额外的 chunk 提取（默认只提取初始加载模块）
+            allChunks: true
+        }),
+
+        // 将文件复制到构建目录
 		// CopyWebpackPlugin-> https://github.com/webpack-contrib/copy-webpack-plugin
 		new CopyWebpackPlugin([
-			{from: __dirname + '/src/demo', to: 'demo'},
 			{from: path.join(__dirname, '/package.json'), to: '', toType: 'file'},
 			{from: path.join(__dirname, '/README.md'), to: '', toType: 'file'}
 		]),
+
+        // 配置环境变量
+        new webpack.DefinePlugin({
+            'process.env': {
+                VERSION: JSON.stringify(version)
+            }
+        }),
 
 		// 使用webpack内置插件压缩js
 		// new webpack.optimize.UglifyJsPlugin({

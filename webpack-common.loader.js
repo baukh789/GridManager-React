@@ -3,6 +3,7 @@
  * @date on 2017/12/12
  */
 const path = require('path');
+const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
 
 module.exports = (srcCodeDir, idDev) => {
     return [
@@ -23,11 +24,12 @@ module.exports = (srcCodeDir, idDev) => {
             }]
         },
         {
-            test: /\.(sc|c)ss$/,
-            use: [
-                { loader: "style-loader" },
-                { loader: "css-loader" }
-            ]
+            test: /\.css$/,
+            use: ExtractTextWebpackPlugin.extract({
+                use: [{
+                    loader: 'css-loader',
+                }]
+            })
         }
     ]
 };
