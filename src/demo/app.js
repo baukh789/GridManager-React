@@ -1,13 +1,16 @@
 import ReactDOM from 'react-dom';
 import React, { useState } from 'react';
-import ReactGridManager, { $gridManager } from '../js/index.jsx';
-function WelcomeInner(props) {
-    return <a title={props.title}>{props.text}</a>;
+import ReactGridManager, { $gridManager } from '../js/index.js';
+
+// 组件: 缩略图
+function SmallPicInner(props) {
+    return <span style={{color: '#098'}}>{props.text}</span>;
 }
-function Welcome(props) {
-    return <span>Hello,<WelcomeInner title={props.title} text={props.text}/></span>;
+function SmallPic(props) {
+    return <span><SmallPicInner text={props.text}/></span>;
 }
 
+// 组件: 空模板
 function EmptyTemplate(props) {
     return (
         <section style={{textAlign: 'center'}}>
@@ -15,55 +18,81 @@ function EmptyTemplate(props) {
         </section>
     );
 }
-function TestSelect(props) {
+
+// 组件: 标题
+function TitleComponents(props) {
     return (
-        <select value={props.type.toString()} onChange={value => {console.log(value)}}>
-            <option value="1">前端框架、插件</option>
-            <option value="2">javaScript相关链接</option>
-            <option value="3">css相关链接</option>
-            <option value="4">html相关链接</option>
-            <option value="5">工具类相关链接</option>
-            <option value="6">其它链接</option>
-        </select>
+        <a href={'https://www.lovejavascript.com/#!zone/blog/content.html?id=' + props.row.id} target={'_black'}>{props.row.title}</a>
     );
 }
-const text = 'react gridmanager';
+
+// 组件: 类型
+function TypeComponents(props) {
+    // 博文类型
+    const TYPE_MAP = {
+        '1': 'HTML/CSS',
+        '2': 'nodeJS',
+        '3': 'javaScript',
+        '4': '前端鸡汤',
+        '5': 'PM Coffee',
+        '6': '前端框架',
+        '7': '前端相关'
+    };
+    return (
+        <button>{TYPE_MAP[props.type]}</button>
+    );
+}
+
+// 组件: 删除
+function DeleteComponents(props) {
+    const deleteAction = event => {
+        alert(`模拟删除[${event.target.title}]`);
+    };
+
+    return (
+        <span className={'plugin-action'} onClick={deleteAction} title={props.row.title}>删除</span>
+    );
+}
 const option = {
     gridManagerName: 'testReact',
-    height: '400px',
-    // supportCheckbox: false,
-    firstLoading: false,
+    height: '100%',
     emptyTemplate: <EmptyTemplate text={'这个React表格, 什么数据也没有'}/>,
     columnData: [{
-        key: 'name',
-        remind: 'the name',
-        align: 'right',
-        text: <Welcome text={text} title={'http://gridmanager.lovejavascript.com/index.html'}/>,
-        // text: '名称',
-        sorting: ''
+        key: 'pic',
+        remind: 'the pic',
+        width: '110px',
+        text: <SmallPic text={'缩略图'}/>,
+        template: (pic, row) => {
+            return (
+                <img style={{width: '90px', margin: '0 auto'}} src={'https://www.lovejavascript.com' + pic} title={row.name}/>
+            );
+        }
+    },{
+        key: 'title',
+        remind: 'the title',
+        text: '标题',
+        template: <TitleComponents/>
     },{
         key: 'type',
         remind: 'the type',
         text: '分类',
+        align: 'center',
         template: (type, row) => {
-            return <TestSelect type={type} name={row.name}/>;
+            return <TypeComponents type={type}/>;
         }
     },{
         key: 'info',
         remind: 'the info',
         text: '使用说明'
     },{
-        key: 'url',
-        remind: 'the url',
-        text: 'url',
+        key: 'username',
+        remind: 'the username',
+        text: '作者',
         // 使用函数返回 dom node
-        template: function(url) {
-            var urlNode = document.createElement('a');
-            urlNode.setAttribute('href', url);
-            urlNode.setAttribute('title', url);
-            urlNode.setAttribute('target', '_blank');
-            urlNode.innerText = url;
-            return urlNode;
+        template: (username, row) => {
+            return (
+                <a href={'https://github.com/baukh789'} target={'_black'}>{username}</a>
+            );
         }
     },{
         key: 'createDate',
@@ -90,27 +119,22 @@ const option = {
         remind: 'the action',
         width: '100px',
         text: '操作',
-        template: function(action, rowObject){
-            return '<span class="plugin-action edit-action" gm-click="testGM">删除</span>';
-        }
+        template: <DeleteComponents/>
     }],
     supportRemind: true,
     isCombSorting:  true,
     supportAjaxPage: true,
     supportSorting: true,
-    ajax_data: 'http://www.lovejavascript.com/learnLinkManager/getLearnLinkList',
+    ajax_data: 'http://www.lovejavascript.com/blogManager/getBlogList',
     ajax_type: 'POST',
 };
 
 ReactDOM.render(
-    <div>
-        <ReactGridManager
-            option={option}
-        />
-    </div>,
+    <ReactGridManager
+        option={option}
+    />,
     document.querySelector('#example')
 );
-
 
 function SearchComponent() {
     const [title, setTitle] = useState('');
@@ -141,4 +165,26 @@ function SearchComponent() {
 ReactDOM.render(
     <SearchComponent/>,
     document.querySelector('#search')
+);
+
+
+
+
+function FooterComponent() {
+    const init = () => {
+        document.querySelector(`table[grid-manager="${option.gridManagerName}"]`).GM('init', option);
+    };
+    const destroy = () => {
+        $gridManager.destroy(option.gridManagerName);
+    };
+    return (
+        <div className="bottom-bar">
+            <button onClick={init}>init</button>
+            <button onClick={destroy}>destroy</button>
+        </div>
+    );
+}
+ReactDOM.render(
+    <FooterComponent/>,
+    document.querySelector('#footer')
 );

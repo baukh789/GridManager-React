@@ -1,15 +1,9 @@
 {
-  "presets": [
-    [
-      "es2015",
-      {
-        "modules": false
-      }
+    "presets": [
+        "@babel/preset-env",
+        "@babel/preset-react"
     ],
-    "react",
-    "stage-0"
-  ],
-  "plugins": [
-    "transform-decorators-legacy"
-  ]
+    "plugins": [
+        "@babel/plugin-proposal-class-properties"
+    ]
 }
