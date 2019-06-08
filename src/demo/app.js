@@ -2,12 +2,16 @@ import ReactDOM from 'react-dom';
 import React, { useState } from 'react';
 import ReactGridManager, { $gridManager } from '../js/index.js';
 
-// 组件: 缩略图
-function SmallPicInner(props) {
-    return <span style={{color: '#098'}}>{props.text}</span>;
+// 组件: 操作列
+function ActionInner(props) {
+    const actionAlert = event => {
+        alert('操作栏th是由React模板渲染的');
+    };
+    return <span onClick={actionAlert} style={{display: 'block', color: 'red'}}>{props.text}</span>;
 }
-function SmallPic(props) {
-    return <span><SmallPicInner text={props.text}/></span>;
+
+function ActionComponents(props) {
+    return <ActionInner text={props.text}/>;
 }
 
 // 组件: 空模板
@@ -45,23 +49,38 @@ function TypeComponents(props) {
 
 // 组件: 删除
 function DeleteComponents(props) {
+    const {index, row} = props;
     const deleteAction = event => {
-        alert(`模拟删除[${event.target.title}]`);
+        if(window.confirm(`确认要删除当前页第[${event.target.getAttribute('data-index')}]条的['${event.target.title}]?`)){
+            console.log('----删除操作开始----');
+            $gridManager.refreshGrid(option.gridManagerName);
+            console.log('数据没变是正常的, 因为这只是个示例,并不会真实删除数据.');
+            console.log('----删除操作完成----');
+        }
     };
 
     return (
-        <span className={'plugin-action'} onClick={deleteAction} title={props.row.title}>删除</span>
+        <span className={'plugin-action'} onClick={deleteAction} data-index={index} title={row.title}>删除</span>
     );
 }
 const option = {
     gridManagerName: 'testReact',
     height: '100%',
     emptyTemplate: <EmptyTemplate text={'这个React表格, 什么数据也没有'}/>,
+    topFullColumn: {
+        template: (row, index) => {
+            return (<div style={{padding: '12px', textAlign: 'center'}}>
+                {index} - 快速、灵活的对Table标签进行实例化，让Table标签充满活力。该项目已开源,
+                        <a target="_blank" href="https://github.com/baukh789/GridManager">点击进入</a>
+                        github
+                   </div>);
+        }
+    },
     columnData: [{
         key: 'pic',
         remind: 'the pic',
         width: '110px',
-        text: <SmallPic text={'缩略图'}/>,
+        text: '缩略图',
         template: (pic, row) => {
             return (
                 <img style={{width: '90px', margin: '0 auto'}} src={'https://www.lovejavascript.com' + pic} title={row.name}/>
@@ -77,7 +96,7 @@ const option = {
         remind: 'the type',
         text: '分类',
         align: 'center',
-        template: (type, row) => {
+        template: (type, row, index) => {
             return <TypeComponents type={type}/>;
         }
     },{
@@ -89,7 +108,7 @@ const option = {
         remind: 'the username',
         text: '作者',
         // 使用函数返回 dom node
-        template: (username, row) => {
+        template: (username, row, index) => {
             return (
                 <a href={'https://github.com/baukh789'} target={'_black'}>{username}</a>
             );
@@ -118,7 +137,9 @@ const option = {
         key: 'action',
         remind: 'the action',
         width: '100px',
-        text: '操作',
+        disableCustomize: true,
+        text: <ActionComponents text={'操作'}/>,
+        // 快捷方式，将自动向组件的props增加row、index属性
         template: <DeleteComponents/>
     }],
     supportRemind: true,
@@ -144,19 +165,23 @@ function SearchComponent() {
         $gridManager.setQuery(option.gridManagerName, {title, content});
     }
 
+    function reset() {
+        setTitle('');
+        setContent('');
+    }
     return (
         <div className="search-area">
             <div className="sa-ele">
                 <label className="se-title">名称:</label>
-                <input className="se-con" onChange={event=>{setTitle(event.target.value)}}/>
+                <input className="se-con" value={title} onChange={event=>{setTitle(event.target.value)}}/>
             </div>
             <div className="sa-ele">
                 <label className="se-title">内容:</label>
-                <input className="se-con" onChange={event=>{setContent(event.target.value)}}/>
+                <input className="se-con" value={content} onChange={event=>{setContent(event.target.value)}}/>
             </div>
             <div className="sa-ele">
                 <button className="search-action" onClick={setQuery}>搜索</button>
-                <button className="reset-action">重置</button>
+                <button className="reset-action" onClick={reset}>重置</button>
             </div>
         </div>
     );

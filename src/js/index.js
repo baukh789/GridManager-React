@@ -20,30 +20,38 @@ export default class ReactGridManager extends React.Component {
     }
     componentDidMount() {
         // 框架解析唯一值
-        const COMPILE_ID = 'data-compile-id';
         const table = this.refs[this.option.gridManagerName];
 
-        this.option.compileList = [];
-        this.option.compileReact = () => {
+        this.option.compileReact = compileList => {
             return new Promise(resolve => {
-                this.option.compileList.forEach((item, index) => {
-                    let element = item.el;
+                compileList.forEach((item, index) => {
+                    let element = item.template;
                     const row = item.row;
-                    const context = document.querySelector(`[${COMPILE_ID}="${index}"]`);
-                    context.removeAttribute(COMPILE_ID);
-
+                    const context = item.el;
                     // reactElement
                     if (React.isValidElement(element)) {
-                        element = React.cloneElement(element, {row, ...element.props});
+                        element = React.cloneElement(element, {row, index: item.index, ...element.props});
                     }
 
                     // function
                     if (typeof element === 'function') {
-                        element = element(item.cell, row);
+                        element = element(...item.fnArg);
                     }
 
-                    // not reactElement
-                    if (!React.isValidElement(element)) {
+                    // reactElement
+                    if (React.isValidElement(element)) {
+                        element = React.cloneElement(element, {...element.props});
+                    }
+
+                    // string
+                    if (typeof element === 'string') {
+                        context.innerHTML = element;
+                        return;
+                    }
+
+                    // dom
+                    if (element.nodeType === 1) {
+                        context.append(element);
                         return;
                     }
 
@@ -52,7 +60,6 @@ export default class ReactGridManager extends React.Component {
                         context
                     );
                 });
-                this.option.compileList.length = 0;
                 resolve();
             });
         };
