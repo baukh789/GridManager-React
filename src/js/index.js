@@ -7,11 +7,13 @@ import '../../node_modules/gridmanager/css/gm.css';
 const $gridManager = GridManager;
 export { $gridManager };
 export default class ReactGridManager extends React.Component {
+    static version = process.env.VERSION;
     static propTypes = {
         props: PropTypes.object
     };
 
     option = this.props.option;
+    callback = this.props.callback;
 
     render() {
         return (
@@ -63,8 +65,10 @@ export default class ReactGridManager extends React.Component {
                 resolve();
             });
         };
-        table.GM(this.option);
-        $gridManager.setScope(table, this);
+        table.GM(this.option, query => {
+            typeof(this.callback) === 'function' && this.callback({query: query});
+            $gridManager.setScope(table, this);
+        });
     }
 
     componentWillUnmount() {
