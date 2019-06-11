@@ -95,19 +95,19 @@ const option = {
         template: <TitleComponents/>
     },{
         key: 'type',
-        remind: 'the type',
-        text: '分类',
+        text: '博文分类',
+        width: '150px',
         align: 'center',
         template: (type, row, index) => {
             return <TypeComponents type={type}/>;
         }
     },{
         key: 'info',
-        remind: 'the info',
-        text: '使用说明'
+        text: '简介',
     },{
         key: 'username',
         remind: 'the username',
+        width: '100px',
         text: '作者',
         // 使用函数返回 dom node
         template: (username, row, index) => {
@@ -118,7 +118,7 @@ const option = {
     },{
         key: 'createDate',
         remind: 'the createDate',
-        width: '100px',
+        width: '130px',
         text: '创建时间',
         sorting: 'DESC',
         // 使用函数返回 htmlString
@@ -128,7 +128,7 @@ const option = {
     },{
         key: 'lastDate',
         remind: 'the lastDate',
-        width: '120px',
+        width: '130px',
         text: '最后修改时间',
         sorting: '',
         // 使用函数返回 htmlString

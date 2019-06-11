@@ -1,16 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
 import '../../node_modules/gridmanager/js/gm';
 import '../../node_modules/gridmanager/css/gm.css';
 
 const $gridManager = GridManager;
 export { $gridManager };
 export default class ReactGridManager extends React.Component {
+    // 版本号
     static version = process.env.VERSION;
-    static propTypes = {
-        props: PropTypes.object
-    };
 
     option = this.props.option;
     callback = this.props.callback;
@@ -26,7 +23,7 @@ export default class ReactGridManager extends React.Component {
 
         this.option.compileReact = compileList => {
             return new Promise(resolve => {
-                compileList.forEach((item, index) => {
+                compileList.forEach(item => {
                     let element = item.template;
                     const row = item.row;
                     const context = item.el;

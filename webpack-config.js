@@ -34,10 +34,7 @@ const config = {
         libraryTarget: 'umd'
 	},
 
-    externals: {
-        'react': 'react',
-        'react-dom': 'react-dom'
-    },
+    externals: ['react', 'react-dom'],
 
     // 优化代码
     optimization: {
