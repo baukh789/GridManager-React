@@ -1,6 +1,6 @@
 {
     "name": "gridmanager-react",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "GridManager by React",
     "main": "/js/gm-react",
     "scripts": {
@@ -41,7 +41,7 @@
         "webpack-dev-middleware": "^3.7.0"
     },
     "dependencies": {
-        "gridmanager": "^2.8.5",
+        "gridmanager": "^2.8.6",
         "react": "^16.8.6",
         "react-dom": "^16.8.6"
     }
