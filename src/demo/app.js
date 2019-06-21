@@ -67,7 +67,6 @@ function DeleteComponents(props) {
 // 表格组件配置
 const option = {
     gridManagerName: 'testReact',
-    height: '100%',
     emptyTemplate: <EmptyTemplate text={'这个React表格, 什么数据也没有'}/>,
     topFullColumn: {
         template: (row, index) => {
@@ -159,7 +158,8 @@ const callback = query => {
 
 ReactDOM.render(
     <GridManager
-        option={option}
+        option={option} // 也可以将option中的配置项展开
+        height={'100%'} // 展开后的参数，会覆盖option中的值
         callback={callback}
     />,
     document.querySelector('#example')

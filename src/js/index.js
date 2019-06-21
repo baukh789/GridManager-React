@@ -6,11 +6,19 @@ import '../../node_modules/gridmanager/css/gm.css';
 const $gridManager = GridManager;
 export { $gridManager };
 export default class ReactGridManager extends React.Component {
+    constructor(props) {
+        super(props);
+        this.option = this.props.option || {};
+        this.callback = this.props.callback;
+        Object.keys(props).forEach(key => {
+            if (!['option', 'callback'].includes(key)) {
+                this.option[key] = props[key];
+            }
+        });
+    }
+
     // 版本号
     static version = process.env.VERSION;
-
-    option = this.props.option;
-    callback = this.props.callback;
 
     render() {
         return (
@@ -77,8 +85,7 @@ export default class ReactGridManager extends React.Component {
 const staticList = Object.getOwnPropertyNames($gridManager);
 const noExtendsList = ['name', 'length', 'prototype', 'version'];
 staticList.forEach(key => {
-    if (noExtendsList.includes(key)) {
-        return;
+    if (!noExtendsList.includes(key)) {
+        ReactGridManager[key] = $gridManager[key];
     }
-    ReactGridManager[key] = $gridManager[key];
 });

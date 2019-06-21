@@ -209,7 +209,8 @@ const callback = query => {
 
 ReactDOM.render(
     <GridManager
-        option={option}
+        option={option} // 也可以将option中的配置项展开
+        height={'100%'} // 展开后的参数，会覆盖option中的值
         callback={callback}
     />,
     document.querySelector('#example')
