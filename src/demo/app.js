@@ -69,15 +69,15 @@ const option = {
     gridManagerName: 'testReact',
     height: '100%',
     emptyTemplate: <EmptyTemplate text={'这个React表格, 什么数据也没有'}/>,
-    // topFullColumn: {
-    //     template: (row, index) => {
-    //         return (<div style={{padding: '12px', textAlign: 'center'}}>
-    //             {index} - 快速、灵活的对Table标签进行实例化，让Table标签充满活力。该项目已开源,
-    //                     <a target="_blank" href="https://github.com/baukh789/GridManager">点击进入</a>
-    //                     github
-    //                </div>);
-    //     }
-    // },
+    topFullColumn: {
+        template: (row, index) => {
+            return (<div style={{padding: '12px', textAlign: 'center'}}>
+                {index} - 快速、灵活的对Table标签进行实例化，让Table标签充满活力。该项目已开源,
+                        <a target="_blank" href="https://github.com/baukh789/GridManager">点击进入</a>
+                        github
+                   </div>);
+        }
+    },
     columnData: [{
         key: 'pic',
         remind: 'the pic',
