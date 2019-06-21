@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom';
 import React, { useState } from 'react';
-import ReactGridManager, { $gridManager } from '../js/index.js';
+import GridManager from '../js/index.js';
 
 // 组件: 操作列
 function ActionInner(props) {
@@ -53,7 +53,7 @@ function DeleteComponents(props) {
     const deleteAction = event => {
         if(window.confirm(`确认要删除当前页第[${event.target.getAttribute('data-index')}]条的['${event.target.title}]?`)){
             console.log('----删除操作开始----');
-            $gridManager.refreshGrid(option.gridManagerName);
+            GridManager.refreshGrid(option.gridManagerName);
             console.log('数据没变是正常的, 因为这只是个示例,并不会真实删除数据.');
             console.log('----删除操作完成----');
         }
@@ -158,7 +158,7 @@ const callback = query => {
 };
 
 ReactDOM.render(
-    <ReactGridManager
+    <GridManager
         option={option}
         callback={callback}
     />,
@@ -170,7 +170,7 @@ function SearchComponent() {
     const [content, setContent] = useState('');
 
     function setQuery() {
-        $gridManager.setQuery(option.gridManagerName, {title, content});
+        GridManager.setQuery(option.gridManagerName, {title, content});
     }
 
     function reset() {
@@ -208,7 +208,7 @@ function FooterComponent() {
         document.querySelector(`table[grid-manager="${option.gridManagerName}"]`).GM('init', option);
     };
     const destroy = () => {
-        $gridManager.destroy(option.gridManagerName);
+        GridManager.destroy(option.gridManagerName);
     };
     return (
         <div className="bottom-bar">

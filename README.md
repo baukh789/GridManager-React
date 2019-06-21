@@ -40,7 +40,7 @@ ES2015 + webpack + React + GridManager
 ## 项目中引用
 - es2015引入方式
 ```javascript
-import ReactGridManager, {$gridManager} from 'gridmanager-react';
+import ReactGridManager from 'gridmanager-react';
 import 'gridmanager-react/css/gm-react.css';
 ```
 
@@ -58,7 +58,7 @@ import 'gridmanager-react/css/gm-react.css';
 ```javascript
 import ReactDOM from 'react-dom';
 import React, { useState } from 'react';
-import ReactGridManager, { $gridManager } from 'gridmanager-react';
+import GridManager from 'gridmanager-react';
 import 'gridmanager-react/css/gm-react.css';
 
 // 组件: 操作列
@@ -112,7 +112,7 @@ function DeleteComponents(props) {
     const deleteAction = event => {
         if(window.confirm(`确认要删除当前页第[${event.target.getAttribute('data-index')}]条的['${event.target.title}]?`)){
             console.log('----删除操作开始----');
-            $gridManager.refreshGrid(option.gridManagerName);
+            GridManager.refreshGrid(option.gridManagerName);
             console.log('数据没变是正常的, 因为这只是个示例,并不会真实删除数据.');
             console.log('----删除操作完成----');
         }
@@ -208,7 +208,7 @@ const callback = query => {
 };
 
 ReactDOM.render(
-    <ReactGridManager
+    <GridManager
         option={option}
         callback={callback}
     />,
@@ -217,15 +217,15 @@ ReactDOM.render(
 ```
 
 ### 调用公开方法
-> 通过ES6语法，将$gridManager引入。
+> 通过ES6语法，将GridManager引入。
 ```javascript
-import { $gridManager } from 'gridmanager-react';
+import GridManager, {$gridManager} from 'gridmanager-react';
 
 // 刷新
-$gridManager.refreshGrid('testReact');
+GridManager.refreshGrid('testReact'); // 或 $gridManager.refreshGrid('testReact');
 
 // 更新查询条件
-$gridManager.setQuery('testReact', {name: 'baukh'});
+GridManager.setQuery('testReact', {name: 'baukh'}); // 或 $gridManager.setQuery('testReact', {name: 'baukh'});
 
 // ...其它更多请直接访问API
 ```

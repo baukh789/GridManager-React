@@ -72,3 +72,13 @@ export default class ReactGridManager extends React.Component {
         $gridManager.destroy(this.option.gridManagerName);
     }
 }
+
+// 将原生方法，挂载至React GridManager 上
+const staticList = Object.getOwnPropertyNames($gridManager);
+const noExtendsList = ['name', 'length', 'prototype', 'version'];
+staticList.forEach(key => {
+    if (noExtendsList.includes(key)) {
+        return;
+    }
+    ReactGridManager[key] = $gridManager[key];
+});
