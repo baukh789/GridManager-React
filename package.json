@@ -1,14 +1,14 @@
 {
     "name": "gridmanager-react",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "description": "GridManager by React",
     "main": "/js/gm-react",
     "scripts": {
         "start": "node server",
         "build": "webpack --config webpack-config.js",
         "preversion": "npm test",
-        "version": "npm run build && git add -A dist",
-        "postversion": "git push && git push --tags && rm -rf build/temp"
+        "version": "npm run build",
+        "postversion": "git push && git push --tags"
     },
     "repository": {
         "type": "git",
