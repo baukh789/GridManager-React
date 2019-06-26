@@ -198,8 +198,8 @@ const option = {
     isCombSorting:  true,
     supportAjaxPage: true,
     supportSorting: true,
-    ajax_data: 'http://www.lovejavascript.com/blogManager/getBlogList',
-    ajax_type: 'POST',
+    ajaxData: 'http://www.lovejavascript.com/blogManager/getBlogList',
+    ajaxType: 'POST',
 };
 
 // 渲染回调函数
