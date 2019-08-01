@@ -71,6 +71,13 @@ export default class ReactGridManager extends React.Component {
             });
         };
         table.GM(this.option, query => {
+            const { className, gridManagerName } = this.option;
+
+            // react版的className需要手动提升至table最外围容器
+            if (className) {
+                document.querySelector(`[grid-manager-wrap="${gridManagerName}"]`).classList.add(className);
+            }
+
             typeof(this.callback) === 'function' && this.callback({query: query});
             $gridManager.setScope(table, this);
         });
