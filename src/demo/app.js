@@ -2,6 +2,7 @@ import ReactDOM from 'react-dom';
 import React, { useState } from 'react';
 import GridManager from '../js/index.js';
 
+const gridManagerName = 'testReact';
 // 组件: 操作列
 function ActionInner(props) {
     const actionAlert = event => {
@@ -48,25 +49,22 @@ function TypeComponents(props) {
 }
 
 // 组件: 删除
-function DeleteComponents(props) {
+function EditComponents(props) {
     const {index, row} = props;
-    const deleteAction = event => {
-        if(window.confirm(`确认要删除当前页第[${event.target.getAttribute('data-index')}]条的['${event.target.title}]?`)){
-            console.log('----删除操作开始----');
-            GridManager.refreshGrid(option.gridManagerName);
-            console.log('数据没变是正常的, 因为这只是个示例,并不会真实删除数据.');
-            console.log('----删除操作完成----');
-        }
+    const editAction = () => {
+        row.title = row.title + '(编辑于' + new Date().toLocaleDateString() +')';
+        GridManager.updateRowData(gridManagerName, 'id', row);
     };
 
     return (
-        <span className={'plugin-action'} onClick={deleteAction} data-index={index} title={row.title}>删除</span>
+        <span className={'plugin-action'} onClick={editAction} data-index={index} title={row.title}>编辑</span>
     );
 }
 
 // 表格组件配置
 const option = {
-    gridManagerName: 'testReact',
+    gridManagerName,
+    disableCache: false,
     emptyTemplate: <EmptyTemplate text={'这个React表格, 什么数据也没有'}/>,
     // topFullColumn: {
     //     template: (row, index) => {
@@ -84,7 +82,7 @@ const option = {
         text: '缩略图',
         template: (pic, row) => {
             return (
-                <img style={{width: '90px', margin: '0 auto'}} src={'https://www.lovejavascript.com' + pic} title={row.name}/>
+                <img style={{width: '90px', height:'58.5px', margin: '0 auto'}} src={'https://www.lovejavascript.com' + pic} title={row.name}/>
             );
         }
     },{
@@ -141,7 +139,7 @@ const option = {
         disableCustomize: true,
         text: <ActionComponents text={'操作'}/>,
         // 快捷方式，将自动向组件的props增加row、index属性
-        template: <DeleteComponents/>
+        template: <EditComponents/>
     }],
     supportRemind: true,
     isCombSorting:  true,
@@ -199,8 +197,6 @@ ReactDOM.render(
     <SearchComponent/>,
     document.querySelector('#search')
 );
-
-
 
 
 function FooterComponent() {
