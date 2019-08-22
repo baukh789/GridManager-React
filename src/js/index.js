@@ -23,7 +23,21 @@ export default class ReactGridManager extends React.Component {
     static version = process.env.VERSION;
 
     // 存储React节点
-    reactCanche = [];
+    reactCache = [];
+
+    /**
+     * 清除已经不存在的React节点
+     */
+    updateReactCache() {
+        console.log('updateReactCache', this.reactCache);
+        this.reactCache = this.reactCache.filter(item => {
+            const { context } = item;
+            if (!window.getComputedStyle(context).display) {
+                ReactDOM.unmountComponentAtNode(context);
+            }
+            return !!window.getComputedStyle(context).display;
+        });
+    }
 
     render() {
         return (
@@ -31,15 +45,61 @@ export default class ReactGridManager extends React.Component {
         );
     }
 
-    componentDidUpdate() {
-        // 更新时，刷新当前展示区域所使用的组件
-        this.reactCanche.forEach(item => {
-            const { element, context } = item;
+    /**
+     * 将原生模板转换为React
+     * @param compileList
+     * @param isAdd: 是否向增加至缓存列表
+     */
+    toReact(compileList, isAdd) {
+        compileList.forEach(item => {
+            let element = item.template;
+            const row = item.row;
+            const context = item.el;
+            // reactElement
+            if (React.isValidElement(element)) {
+                element = React.cloneElement(element, {row, index: item.index, ...element.props});
+            }
+
+            // function
+            if (typeof element === 'function') {
+                element = element(...item.fnArg);
+            }
+
+            // reactElement
+            if (React.isValidElement(element)) {
+                element = React.cloneElement(element, {...element.props});
+            }
+
+            // string
+            if (typeof element === 'string') {
+                context.innerHTML = element;
+                return;
+            }
+
+            // dom
+            if (element.nodeType === 1) {
+                context.append(element);
+                return;
+            }
+
             ReactDOM.render(
-                React.cloneElement(element, {...element.props}),
+                element,
                 context
             );
+
+            // 存储当前展示的React项
+            isAdd && this.reactCache.push({
+                element,
+                context,
+                ...item
+            });
         });
+    }
+
+    componentDidUpdate() {
+        // 更新时，刷新当前展示区域所使用的组件
+        this.updateReactCache();
+        this.toReact(this.reactCache);
     }
 
     componentDidMount() {
@@ -47,57 +107,10 @@ export default class ReactGridManager extends React.Component {
         const table = this.tableRef.current;
 
         this.option.compileReact = compileList => {
-
-            // 清除已经不存在的React节点
-            this.reactCanche = this.reactCanche.filter(item => {
-                const { element, context } = item;
-                if (!window.getComputedStyle(context).display) {
-                    ReactDOM.unmountComponentAtNode(context);
-                }
-                return !!window.getComputedStyle(context).display;
-            });
+            this.updateReactCache();
 
             return new Promise(resolve => {
-                compileList.forEach(item => {
-                    let element = item.template;
-                    const row = item.row;
-                    const context = item.el;
-                    // reactElement
-                    if (React.isValidElement(element)) {
-                        element = React.cloneElement(element, {row, index: item.index, ...element.props});
-                    }
-
-                    // function
-                    if (typeof element === 'function') {
-                        element = element(...item.fnArg);
-                    }
-
-                    // reactElement
-                    if (React.isValidElement(element)) {
-                        element = React.cloneElement(element, {...element.props});
-                    }
-
-                    // string
-                    if (typeof element === 'string') {
-                        context.innerHTML = element;
-                        return;
-                    }
-
-                    // dom
-                    if (element.nodeType === 1) {
-                        context.append(element);
-                        return;
-                    }
-
-                    ReactDOM.render(
-                        element,
-                        context
-                    );
-                    this.reactCanche.push({
-                        element,
-                        context
-                    });
-                });
+                this.toReact(compileList, true);
                 resolve();
             });
         };
