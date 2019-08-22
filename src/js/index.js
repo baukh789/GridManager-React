@@ -8,6 +8,8 @@ export { $gridManager };
 export default class ReactGridManager extends React.Component {
     constructor(props) {
         super(props);
+        this.tableRef = React.createRef();
+
         this.option = this.props.option || {};
         this.callback = this.props.callback;
         Object.keys(props).forEach(key => {
@@ -20,16 +22,41 @@ export default class ReactGridManager extends React.Component {
     // 版本号
     static version = process.env.VERSION;
 
+    // 存储React节点
+    reactCanche = [];
+
     render() {
         return (
-            <table ref={this.option.gridManagerName}></table>
+            <table ref={this.tableRef}/>
         );
     }
+
+    componentDidUpdate() {
+        // 更新时，刷新当前展示区域所使用的组件
+        this.reactCanche.forEach(item => {
+            const { element, context } = item;
+            ReactDOM.render(
+                React.cloneElement(element, {...element.props}),
+                context
+            );
+        });
+    }
+
     componentDidMount() {
         // 框架解析唯一值
-        const table = this.refs[this.option.gridManagerName];
+        const table = this.tableRef.current;
 
         this.option.compileReact = compileList => {
+
+            // 清除已经不存在的React节点
+            this.reactCanche = this.reactCanche.filter(item => {
+                const { element, context } = item;
+                if (!window.getComputedStyle(context).display) {
+                    ReactDOM.unmountComponentAtNode(context);
+                }
+                return !!window.getComputedStyle(context).display;
+            });
+
             return new Promise(resolve => {
                 compileList.forEach(item => {
                     let element = item.template;
@@ -66,6 +93,10 @@ export default class ReactGridManager extends React.Component {
                         element,
                         context
                     );
+                    this.reactCanche.push({
+                        element,
+                        context
+                    });
                 });
                 resolve();
             });
