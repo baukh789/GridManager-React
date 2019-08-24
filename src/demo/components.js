@@ -1,5 +1,5 @@
 import React from 'react';
-import GridManager from '../js/index.js';
+import { $gridManager } from '../js/index.js';
 
 // 组件: 操作列
 function ActionInner(props) {
@@ -48,14 +48,14 @@ export function TypeComponents(props) {
 }
 // 组件: 删除
 export function EditComponents(props) {
-    const { gmkey, index, row, num } = props;
+    const { gmkey, index, row } = props;
     const editAction = () => {
         row.title = row.title + '(编辑于' + new Date().toLocaleDateString() +')';
-        GridManager.updateRowData(gmkey, 'id', row);
+        $gridManager.updateRowData(gmkey, 'id', row);
     };
 
     // console.log('EditComponents');
     return (
-        <span className={'plugin-action'} onClick={editAction} data-index={index} title={row.title}>编辑 - {num}</span>
+        <span className='plugin-action' onClick={editAction} data-index={index} title={row.title}>编辑</span>
     );
 }

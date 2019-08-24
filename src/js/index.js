@@ -1,10 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import '../../node_modules/gridmanager/js/gm';
-import '../../node_modules/gridmanager/css/gm.css';
+import $gridManager, { jTool } from 'gridmanager';
+import 'gridmanager/css/gm.css';
 
-const $gridManager = GridManager;
-export { $gridManager };
+export { $gridManager, jTool };
 export default class ReactGridManager extends React.Component {
     constructor(props) {
         super(props);
@@ -29,7 +28,6 @@ export default class ReactGridManager extends React.Component {
      * 清除已经不存在的React节点
      */
     updateReactCache() {
-        console.log('updateReactCache', this.reactCache);
         this.reactCache = this.reactCache.filter(item => {
             const { context } = item;
             if (!window.getComputedStyle(context).display) {
@@ -97,9 +95,10 @@ export default class ReactGridManager extends React.Component {
     }
 
     componentDidUpdate() {
-        // 更新时，刷新当前展示区域所使用的组件
+        const columnData = this.props.columnData;
+
+        $gridManager.redrawGrid(this.tableRef.current, columnData);
         this.updateReactCache();
-        this.toReact(this.reactCache);
     }
 
     componentDidMount() {
