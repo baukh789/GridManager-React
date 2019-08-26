@@ -8,14 +8,7 @@ export default class ReactGridManager extends React.Component {
     constructor(props) {
         super(props);
         this.tableRef = React.createRef();
-
-        this.option = this.props.option || {};
-        this.callback = this.props.callback;
-        Object.keys(props).forEach(key => {
-            if (!['option', 'callback'].includes(key)) {
-                this.option[key] = props[key];
-            }
-        });
+        this.mergeProps();
     }
 
     // 版本号
@@ -23,6 +16,19 @@ export default class ReactGridManager extends React.Component {
 
     // 存储React节点
     reactCache = [];
+
+    /**
+     * 合并option， 这个函数用于实现将option内的参数分开配置
+     */
+    mergeProps() {
+        this.option = this.props.option || {};
+        this.callback = this.props.callback;
+        Object.keys(this.props).forEach(key => {
+            if (!['option', 'callback'].includes(key)) {
+                this.option[key] = this.props[key];
+            }
+        });
+    }
 
     /**
      * 清除已经不存在的React节点
@@ -53,6 +59,7 @@ export default class ReactGridManager extends React.Component {
             let element = item.template;
             const row = item.row;
             const context = item.el;
+
             // reactElement
             if (React.isValidElement(element)) {
                 element = React.cloneElement(element, {row, index: item.index, ...element.props});
@@ -87,18 +94,66 @@ export default class ReactGridManager extends React.Component {
 
             // 存储当前展示的React项
             isAdd && this.reactCache.push({
-                element,
-                context,
-                ...item
+                ...item,
+                context
             });
         });
     }
 
     componentDidUpdate() {
-        const columnData = this.props.columnData;
+        this.mergeProps();
 
-        $gridManager.redrawGrid(this.tableRef.current, columnData);
+        const { columnData, emptyTemplate, topFullColumn } = this.props.option;
+
+        const settings = $gridManager.get(this.option.gridManagerName);
+        const { columnMap } = settings;
+
+        // 更新模板: columnMap 中使用到的模板
+        columnData && columnData.forEach(item => {
+            columnMap[item.key].text = item.text;
+            columnMap[item.key].template = item.template;
+        });
+
+        // 更新模板: 通栏
+        settings.topFullColumn = topFullColumn;
+
+        // 更新模板: 空
+        settings.emptyTemplate = emptyTemplate;
+
+        $gridManager.resetSettings(this.tableRef.current, settings);
+
         this.updateReactCache();
+
+        // 更新已缓存的模板
+        this.reactCache.forEach(item => {
+            switch (item.type) {
+                // columnMap: text || template
+                case 'text':
+                case 'template': {
+                    item.template = columnMap[item.key][item.type];
+                    break;
+                }
+
+                // 空模板
+                case 'empty': {
+                    item.template = emptyTemplate;
+                    break;
+                }
+
+                // 通栏
+                case 'full': {
+                    item.template = topFullColumn.template;
+                    break;
+                }
+
+                default: {
+                    break;
+                }
+            }
+        });
+
+        // 将当前的react节点重新渲染
+        this.toReact(this.reactCache);
     }
 
     componentDidMount() {

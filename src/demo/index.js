@@ -6,16 +6,159 @@ import { ActionComponents, EmptyTemplate, TitleComponents, TypeComponents, EditC
 import FooterComponent from './footer';
 import AppContext from './AppContext';
 
+// 静态数据
+const ajaxData1 = {
+    "data":[
+        {
+            "id": 1,
+            "name": "baukh",
+            "age": "28",
+            "createDate": "2015-03-12",
+            "info": "野生前端程序",
+            "children": [
+                {
+                    "id": 11,
+                    "name": "baukh-11",
+                    "age": "28",
+                    "createDate": "2015-03-12",
+                    "info": "野生前端程序",
+                    "children": [
+                        {
+                            "id": 111,
+                            "name": "baukh-111",
+                            "age": "28",
+                            "createDate": "2015-03-12",
+                            "info": "野生前端程序"
+                        },
+                        {
+                            "id": 112,
+                            "name": "baukh-112",
+                            "age": "28",
+                            "createDate": "2015-03-12",
+                            "info": "野生前端程序"
+                        }
+                    ]
+                },
+                {
+                    "id": 12,
+                    "name": "baukh-12",
+                    "age": "28",
+                    "createDate": "2015-03-12",
+                    "info": "野生前端程序"
+                },
+                {
+                    "id": 13,
+                    "name": "baukh-13",
+                    "age": "28",
+                    "createDate": "2015-03-12",
+                    "info": "野生前端程序"
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "baukh",
+            "age": "28",
+            "createDate": "2015-03-12",
+            "info": "野生前端程序"
+        },
+        {
+            "id": 3,
+            "name": "baukh",
+            "age": "28",
+            "createDate": "2015-03-12",
+            "info": "野生前端程序"
+        },
+        {
+            "id": 4,
+            "name": "baukh",
+            "age": "28",
+            "createDate": "2015-03-12",
+            "info": "野生前端程序",
+            "children": [
+                {
+
+                    "id": 41,
+                    "name": "baukh",
+                    "age": "28",
+                    "createDate": "2015-03-12",
+                    "info": "野生前端程序"
+                },
+                {
+
+                    "id": 42,
+                    "name": "baukh",
+                    "age": "28",
+                    "createDate": "2015-03-12",
+                    "info": "野生前端程序"
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "name": "baukh",
+            "age": "28",
+            "createDate": "2015-03-12",
+            "info": "野生前端程序"
+        },{
+            "id": 6,
+            "name": "baukh",
+            "age": "28",
+            "createDate": "2015-03-12",
+            "info": "野生前端程序"
+        },
+        {
+            "id": 7,
+            "name": "baukh",
+            "age": "28",
+            "createDate": "2015-03-12",
+            "info": "野生前端程序"
+        },
+        {
+            "id": 8,
+            "name": "baukh",
+            "age": "28",
+            "createDate": "2015-03-12",
+            "info": "野生前端程序"
+        }
+    ],
+    "totals": 8
+};
 const option = {
     disableCache: false,
-    emptyTemplate: <EmptyTemplate text={'这个React表格, 什么数据也没有'}/>,
     isCombSorting:  true,
     supportAjaxPage: true,
     supportSorting: true,
+    // supportTreeData: true,
+    // treeConfig: {
+    //     // insertTo: 'age',
+    //     openState: false,
+    //     treeKey: 'children'
+    // },
     ajaxData: 'http://www.lovejavascript.com/blogManager/getBlogList',
+    // ajaxData: ajaxData1,
     ajaxType: 'POST',
 };
 
+const getEmptyTemplate = (num, testFN) => {
+    return (
+        <>
+            <EmptyTemplate text={'这个React表格, 什么数据也没有' + num} testFN={testFN}/>
+        </>
+    );
+};
+
+const getFullColumn = num => {
+    return {
+        template: function () {
+            return (<div style={{padding: '12px', textAlign: 'center'}}>
+                快速、灵活的对Table标签进行实例化，让Table标签充满活力。该项目已开源, {num}
+                <a target="_blank" href="https://github.com/baukh789/GridManager">点击进入</a>
+                github
+            </div>);
+        }
+    };
+};
 const getColumnData = (num, testFN) => {
     return [{
         key: 'pic',
@@ -91,7 +234,7 @@ const getColumnData = (num, testFN) => {
         remind: 'the action',
         width: '100px',
         disableCustomize: true,
-        text: <ActionComponents text={'操作'}/>,
+        text: <ActionComponents text={'操作' + num}/>,
         template: (action, row, index) => {
             return (
                 <>
@@ -111,12 +254,16 @@ class App extends Component{
         const testFN = () => {
             this.setState(state => {
                 this.columnData = getColumnData(state.num + 1, testFN);
+                this.topFullColumn = getFullColumn(state.num + 1);
+                this.emptyTemplate = getEmptyTemplate(state.num + 1, testFN);
                 return {
                     num: state.num + 1
                 };
             });
         };
         this.columnData = getColumnData(this.state.num, testFN);
+        this.topFullColumn = getFullColumn(this.state.num);
+        this.emptyTemplate = getEmptyTemplate(this.state.num, testFN);
     }
     static contextType = AppContext;
 
@@ -134,11 +281,12 @@ class App extends Component{
                 </div>
                 <div id="example">
                     <GridManagerReact
-                        num={this.state.num}
                         gridManagerName={gridManagerName}
                         option={option} // 也可以将option中的配置项展开
                         height={'100%'} // 展开后的参数，会覆盖option中的值
+                        emptyTemplate={this.emptyTemplate}
                         columnData={this.columnData}
+                        topFullColumn={this.topFullColumn}
                         callback={this.callback.bind(this)}/>
                 </div>
                 <div id="footer">

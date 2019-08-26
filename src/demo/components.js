@@ -19,6 +19,7 @@ export function EmptyTemplate(props) {
     return (
         <section style={{textAlign: 'center'}}>
             {props.text}
+            <span className='plugin-action' onClick={props.testFN}>state</span>
         </section>
     );
 }
