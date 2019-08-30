@@ -104,6 +104,9 @@ export default class ReactGridManager extends React.Component {
         this.mergeProps();
 
         const settings = $gridManager.get(this.option.gridManagerName);
+        if (!settings.rendered) {
+            return;
+        }
         const { columnData, emptyTemplate = settings.emptyTemplate, topFullColumn = settings.topFullColumn } = this.option;
 
         const { columnMap } = settings;
