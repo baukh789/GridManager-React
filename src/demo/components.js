@@ -55,7 +55,6 @@ export function EditComponents(props) {
         $gridManager.updateRowData(gmkey, 'id', row);
     };
 
-    // console.log('EditComponents');
     return (
         <span className='plugin-action' onClick={editAction} data-index={index} title={row.title}>编辑</span>
     );

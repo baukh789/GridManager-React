@@ -35,11 +35,16 @@ export default class ReactGridManager extends React.Component {
      */
     updateReactCache() {
         this.reactCache = this.reactCache.filter(item => {
-            const { context } = item;
-            if (!window.getComputedStyle(context).display) {
-                ReactDOM.unmountComponentAtNode(context);
+            const { el } = item;
+            if (!window.getComputedStyle(el).display) {
+                // 清除framework.send 后存在操作的DOM节点
+                const tree = el.querySelector('[tree-element]');
+                tree && el.removeChild(tree);
+
+                // 移除react node
+                ReactDOM.unmountComponentAtNode(el);
             }
-            return !!window.getComputedStyle(context).display;
+            return !!window.getComputedStyle(el).display;
         });
     }
 
@@ -56,46 +61,38 @@ export default class ReactGridManager extends React.Component {
      */
     toReact(compileList, isAdd) {
         compileList.forEach(item => {
-            let element = item.template;
-            const row = item.row;
-            const context = item.el;
+            const { row, el, template, fnArg = []} = item;
+            let element = template(...fnArg);
 
             // reactElement
             if (React.isValidElement(element)) {
                 element = React.cloneElement(element, {row, index: item.index, ...element.props});
             }
 
-            // function
-            if (typeof element === 'function') {
-                element = element(...item.fnArg);
-            }
-
-            // reactElement
-            if (React.isValidElement(element)) {
-                element = React.cloneElement(element, {...element.props});
-            }
-
             // string
             if (typeof element === 'string') {
-                context.innerHTML = element;
+                el.innerHTML = element;
                 return;
             }
 
+            if (!element) {
+                return;
+            }
             // dom
             if (element.nodeType === 1) {
-                context.append(element);
+                el.append(element);
                 return;
             }
 
             ReactDOM.render(
                 element,
-                context
+                el
             );
 
             // 存储当前展示的React项
             isAdd && this.reactCache.push({
                 ...item,
-                context
+                el
             });
         });
     }
@@ -107,11 +104,12 @@ export default class ReactGridManager extends React.Component {
         if (!settings.rendered) {
             return;
         }
-        const { columnData, emptyTemplate = settings.emptyTemplate, topFullColumn = settings.topFullColumn } = this.option;
+
+        let { columnData, emptyTemplate = settings.emptyTemplate, topFullColumn = settings.topFullColumn } = $gridManager.updateTemplate(this.option);
 
         const { columnMap } = settings;
 
-        // 更新模板: columnMap 中使用到的模板
+        // 更新模板: columnMap[text, template]
         columnData && columnData.forEach(item => {
             columnMap[item.key].text = item.text;
             columnMap[item.key].template = item.template;
@@ -124,7 +122,6 @@ export default class ReactGridManager extends React.Component {
         settings.emptyTemplate = emptyTemplate;
 
         $gridManager.resetSettings(this.tableRef.current, settings);
-
         this.updateReactCache();
 
         // 更新已缓存的模板
@@ -171,6 +168,7 @@ export default class ReactGridManager extends React.Component {
                 resolve();
             });
         };
+
         table.GM(this.option, query => {
             const { className, gridManagerName } = this.option;
 

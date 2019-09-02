@@ -251,19 +251,13 @@ class App extends Component{
         this.state = {
             num: 1
         };
-        const testFN = () => {
+        this.testFN = () => {
             this.setState(state => {
-                this.columnData = getColumnData(state.num + 1, testFN);
-                this.topFullColumn = getFullColumn(state.num + 1);
-                this.emptyTemplate = getEmptyTemplate(state.num + 1, testFN);
                 return {
                     num: state.num + 1
                 };
             });
         };
-        this.columnData = getColumnData(this.state.num, testFN);
-        this.topFullColumn = getFullColumn(this.state.num);
-        this.emptyTemplate = getEmptyTemplate(this.state.num, testFN);
     }
     static contextType = AppContext;
 
@@ -273,6 +267,9 @@ class App extends Component{
     }
 
     render() {
+        this.columnData = getColumnData(this.state.num, this.testFN);
+        this.topFullColumn = getFullColumn(this.state.num);
+        this.emptyTemplate = getEmptyTemplate(this.state.num, this.testFN);
         const { gridManagerName, option } = this.context;
         return (
             <>
@@ -284,9 +281,9 @@ class App extends Component{
                         gridManagerName={gridManagerName}
                         option={option} // 也可以将option中的配置项展开
                         height={'100%'} // 展开后的参数，会覆盖option中的值
-                        emptyTemplate={this.emptyTemplate}
                         columnData={this.columnData}
-                        topFullColumn={this.topFullColumn}
+                        // topFullColumn={this.topFullColumn}
+                        emptyTemplate={this.emptyTemplate}
                         callback={this.callback.bind(this)}/>
                 </div>
                 <div id="footer">
