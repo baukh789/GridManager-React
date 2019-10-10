@@ -17,12 +17,21 @@ export default class ReactGridManager extends React.Component {
     // 存储React节点
     reactCache = [];
 
+    // 是否重复触发渲染
+    isRepeatRender = false;
+
     /**
      * 合并option， 这个函数用于实现将option内的参数分开配置
      */
     mergeProps() {
         this.option = this.props.option || {};
-        this.callback = this.props.callback;
+        this.callback = () => {
+            if (this.isRepeatRender) {
+                this.updateReactTemplate();
+                this.isRepeatRender = false;
+            }
+            typeof this.props.callback === 'function' ? this.props.callback() : '';
+        };
         Object.keys(this.props).forEach(key => {
             if (!['option', 'callback'].includes(key)) {
                 this.option[key] = this.props[key];
@@ -97,14 +106,11 @@ export default class ReactGridManager extends React.Component {
         });
     }
 
-    componentDidUpdate() {
-        this.mergeProps();
-
+    /**
+     * 更新react模版
+     */
+    updateReactTemplate() {
         const settings = $gridManager.get(this.option.gridManagerName);
-        if (!settings.rendered) {
-            return;
-        }
-
         let { columnData, emptyTemplate = settings.emptyTemplate, topFullColumn = settings.topFullColumn } = $gridManager.updateTemplate(this.option);
 
         const { columnMap } = settings;
@@ -154,6 +160,17 @@ export default class ReactGridManager extends React.Component {
 
         // 将当前的react节点重新渲染
         this.toReact(this.reactCache);
+    }
+
+    componentDidUpdate() {
+        this.mergeProps();
+
+        if (!$gridManager.get(this.option.gridManagerName).rendered) {
+            this.isRepeatRender = true;
+            return;
+        }
+        this.updateReactTemplate();
+
     }
 
     componentDidMount() {
