@@ -20,18 +20,15 @@ export default class ReactGridManager extends React.Component {
     // 是否重复触发渲染
     isRepeatRender = false;
 
+    // 存储传递的className
+    classNameCache = '';
+
     /**
      * 合并option， 这个函数用于实现将option内的参数分开配置
      */
     mergeProps() {
         this.option = this.props.option || {};
-        this.callback = () => {
-            if (this.isRepeatRender) {
-                this.updateReactTemplate();
-                this.isRepeatRender = false;
-            }
-            typeof this.props.callback === 'function' ? this.props.callback() : '';
-        };
+        this.callback = this.props.callback;
         Object.keys(this.props).forEach(key => {
             if (!['option', 'callback'].includes(key)) {
                 this.option[key] = this.props[key];
@@ -162,6 +159,29 @@ export default class ReactGridManager extends React.Component {
         this.toReact(this.reactCache);
     }
 
+    /**
+     * update table-wrap className
+     * react版的className需要手动提升至table最外围容器
+     */
+    updateClassName() {
+        const { gridManagerName, className } = this.option;
+
+        if (className === this.classNameCache) {
+            return;
+        }
+
+        const classList = document.querySelector(`[grid-manager-wrap="${gridManagerName}"]`).classList;
+        if (this.classNameCache) {
+            classList.remove(this.classNameCache);
+        }
+
+        if (className) {
+            classList.add(className);
+        }
+
+        this.classNameCache = className;
+    }
+
     componentDidUpdate() {
         this.mergeProps();
 
@@ -170,6 +190,7 @@ export default class ReactGridManager extends React.Component {
             return;
         }
         this.updateReactTemplate();
+        this.updateClassName();
 
     }
 
@@ -187,13 +208,12 @@ export default class ReactGridManager extends React.Component {
         };
 
         table.GM(this.option, query => {
-            const { className, gridManagerName } = this.option;
-
-            // react版的className需要手动提升至table最外围容器
-            if (className) {
-                document.querySelector(`[grid-manager-wrap="${gridManagerName}"]`).classList.add(className);
+            if (this.isRepeatRender) {
+                this.updateReactTemplate();
+                this.isRepeatRender = false;
             }
 
+            this.updateClassName();
             typeof(this.callback) === 'function' && this.callback({query: query});
             $gridManager.setScope(table, this);
         });
