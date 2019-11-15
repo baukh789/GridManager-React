@@ -52,9 +52,7 @@ const config = {
             // 压缩css
             new OptimizeCssAssetsPlugin({
                 assetNameRegExp: /\.css$/g,
-                cssProcessor: require('cssnano')({
-                    reduceIdents: false
-                }),
+                cssProcessor: require('cssnano'),
                 cssProcessorOptions: {
                     discardComments: {removeAll: true},
                     minifyGradients: true
