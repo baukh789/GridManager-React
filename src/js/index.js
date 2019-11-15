@@ -207,7 +207,7 @@ export default class ReactGridManager extends React.Component {
             });
         };
 
-        table.GM(this.option, query => {
+        new $gridManager(table, this.option, query => {
             if (this.isRepeatRender) {
                 this.updateReactTemplate();
                 this.isRepeatRender = false;
