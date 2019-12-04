@@ -151,11 +151,13 @@ const getEmptyTemplate = (num, testFN) => {
 const getFullColumn = num => {
     return {
         template: function () {
-            return (<div style={{padding: '12px', textAlign: 'center'}}>
-                快速、灵活的对Table标签进行实例化，让Table标签充满活力。该项目已开源, {num}
-                <a target="_blank" href="https://github.com/baukh789/GridManager">点击进入</a>
-                github
-            </div>);
+            return (
+                    <div style={{padding: '12px', textAlign: 'center'}}>
+                        快速、灵活的对Table标签进行实例化，让Table标签充满活力。该项目已开源, {num}
+                        <a target="_blank" href="https://github.com/baukh789/GridManager">点击进入</a>
+                        github
+                    </div>
+            );
         }
     };
 };
@@ -282,7 +284,7 @@ class App extends Component{
                         option={option} // 也可以将option中的配置项展开
                         height={'100%'} // 展开后的参数，会覆盖option中的值
                         columnData={this.columnData}
-                        // topFullColumn={this.topFullColumn}
+                        topFullColumn={this.topFullColumn}
                         emptyTemplate={this.emptyTemplate}
                         callback={this.callback.bind(this)}/>
                 </div>

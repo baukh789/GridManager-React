@@ -72,6 +72,7 @@ export default class ReactGridManager extends React.Component {
 
             // reactElement
             if (React.isValidElement(element)) {
+                // 如果当前使用的模块(任何类型的)未使用组件或空标签包裹时，会在生成的DOM节点上生成row=[object Object]
                 element = React.cloneElement(element, {row, index: item.index, ...element.props});
             }
 
