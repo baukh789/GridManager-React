@@ -216,7 +216,6 @@ export default class ReactGridManager extends React.Component {
 
             this.updateClassName();
             typeof(this.callback) === 'function' && this.callback({query: query});
-            $gridManager.setScope(table, this);
         });
     }
 
