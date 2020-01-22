@@ -208,6 +208,7 @@ export default class ReactGridManager extends React.Component {
             });
         };
 
+        // 调用原生组件进行实例化
         new $gridManager(table, this.option, query => {
             if (this.isRepeatRender) {
                 this.updateReactTemplate();
