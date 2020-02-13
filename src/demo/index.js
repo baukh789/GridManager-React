@@ -129,9 +129,10 @@ const option = {
     isCombSorting:  true,
     supportAjaxPage: true,
     supportSorting: true,
+    supportMoveRow: true,
     // supportTreeData: true,
     // treeConfig: {
-    //     // insertTo: 'age',
+    //     insertTo: 'title',
     //     openState: false,
     //     treeKey: 'children'
     // },
@@ -284,7 +285,7 @@ class App extends Component{
                         option={option} // 也可以将option中的配置项展开
                         height={'100%'} // 展开后的参数，会覆盖option中的值
                         columnData={this.columnData}
-                        topFullColumn={this.topFullColumn}
+                        // topFullColumn={this.topFullColumn}
                         emptyTemplate={this.emptyTemplate}
                         callback={this.callback.bind(this)}/>
                 </div>
