@@ -7,122 +7,55 @@ import FooterComponent from './footer';
 import AppContext from './AppContext';
 
 // 静态数据
-const ajaxData1 = {
-    "data":[
-        {
-            "id": 1,
-            "name": "baukh",
-            "age": "28",
-            "createDate": "2015-03-12",
-            "info": "野生前端程序",
-            "children": [
-                {
-                    "id": 11,
-                    "name": "baukh-11",
-                    "age": "28",
-                    "createDate": "2015-03-12",
-                    "info": "野生前端程序",
-                    "children": [
-                        {
-                            "id": 111,
-                            "name": "baukh-111",
-                            "age": "28",
-                            "createDate": "2015-03-12",
-                            "info": "野生前端程序"
-                        },
-                        {
-                            "id": 112,
-                            "name": "baukh-112",
-                            "age": "28",
-                            "createDate": "2015-03-12",
-                            "info": "野生前端程序"
-                        }
-                    ]
-                },
-                {
-                    "id": 12,
-                    "name": "baukh-12",
-                    "age": "28",
-                    "createDate": "2015-03-12",
-                    "info": "野生前端程序"
-                },
-                {
-                    "id": 13,
-                    "name": "baukh-13",
-                    "age": "28",
-                    "createDate": "2015-03-12",
-                    "info": "野生前端程序"
-                }
-            ]
-        },
-        {
-            "id": 2,
-            "name": "baukh",
-            "age": "28",
-            "createDate": "2015-03-12",
-            "info": "野生前端程序"
-        },
-        {
-            "id": 3,
-            "name": "baukh",
-            "age": "28",
-            "createDate": "2015-03-12",
-            "info": "野生前端程序"
-        },
-        {
-            "id": 4,
-            "name": "baukh",
-            "age": "28",
-            "createDate": "2015-03-12",
-            "info": "野生前端程序",
-            "children": [
-                {
 
-                    "id": 41,
-                    "name": "baukh",
-                    "age": "28",
-                    "createDate": "2015-03-12",
-                    "info": "野生前端程序"
-                },
-                {
+const getData = num => {
+    const data = [];
+    let child = [];
 
-                    "id": 42,
-                    "name": "baukh",
-                    "age": "28",
-                    "createDate": "2015-03-12",
-                    "info": "野生前端程序"
-                }
-            ]
-        },
-        {
-            "id": 5,
-            "name": "baukh",
-            "age": "28",
-            "createDate": "2015-03-12",
-            "info": "野生前端程序"
-        },{
-            "id": 6,
-            "name": "baukh",
-            "age": "28",
-            "createDate": "2015-03-12",
-            "info": "野生前端程序"
-        },
-        {
-            "id": 7,
-            "name": "baukh",
-            "age": "28",
-            "createDate": "2015-03-12",
-            "info": "野生前端程序"
-        },
-        {
-            "id": 8,
-            "name": "baukh",
-            "age": "28",
-            "createDate": "2015-03-12",
-            "info": "野生前端程序"
+    for (let i = 1; i<= num; i++) {
+        child = [];
+        for (let j = 1; j<= 40; j++) {
+            child.push({
+                "id": parseInt((i.toString() + j.toString()), 10),
+                "pic": '/upload/blog/pic/6717_%E5%AF%BC%E5%87%BA.png',
+                "author": "33",
+                "praiseNumber": "0",
+                "status": "1",
+                "readNumber": "111",
+                "title": "测试数据" + j,
+                "subtitle": "测试数据" + j,
+                "type": j % 5,
+                "info": "野生前端程序",
+                "createDate": 1579350185000,
+                "lastDate": 1579662679374,
+                "commentSum": 0,
+                "username": "拭目以待"
+            });
         }
-    ],
-    "totals": 8
+        data.push({
+            "id": i,
+            "pic": '/upload/blog/pic/6717_%E5%AF%BC%E5%87%BA.png',
+            "author": "33",
+            "praiseNumber": "0",
+            "status": "1",
+            "readNumber": "111",
+            "title": "测试数据" + i,
+            "subtitle": "测试数据" + i,
+            "type": i % 5,
+            "info": "野生前端程序",
+            "createDate": 1579350185000,
+            "lastDate": 1579662679374,
+            "commentSum": 0,
+            "username": "拭目以待",
+            "children": child
+        });
+    }
+
+    return data;
+};
+const ajaxData1 = {
+    "data": getData(20),
+    "totals": 20
 };
 const option = {
     disableCache: false,
@@ -130,14 +63,14 @@ const option = {
     supportAjaxPage: true,
     supportSorting: true,
     supportMoveRow: true,
-    // supportTreeData: true,
+    supportTreeData: true,
     // treeConfig: {
     //     insertTo: 'title',
     //     openState: false,
     //     treeKey: 'children'
     // },
-    ajaxData: 'http://www.lovejavascript.com/blogManager/getBlogList',
-    // ajaxData: ajaxData1,
+    // ajaxData: 'http://www.lovejavascript.com/blogManager/getBlogList',
+    ajaxData: ajaxData1,
     ajaxType: 'POST',
 };
 
@@ -166,7 +99,7 @@ const getColumnData = (num, testFN) => {
     return [{
         key: 'pic',
         remind: 'the pic',
-        width: '110px',
+        width: '130px',
         text: '缩略图',
         template: (pic, row) => {
             return (
@@ -252,7 +185,8 @@ class App extends Component{
     constructor() {
         super();
         this.state = {
-            num: 1
+            num: 1,
+            now: Date.now()
         };
         this.testFN = () => {
             this.setState(state => {
@@ -264,12 +198,15 @@ class App extends Component{
     }
     static contextType = AppContext;
 
-
     callback(query) {
-        console.log('callback => ', query);
+        console.log('callback', Date.now() - this.state.now);
     }
 
+    resetTable() {
+        console.log('resetTable');
+    }
     render() {
+        console.log('render render render');
         this.columnData = getColumnData(this.state.num, this.testFN);
         this.topFullColumn = getFullColumn(this.state.num);
         this.emptyTemplate = getEmptyTemplate(this.state.num, this.testFN);
@@ -290,7 +227,7 @@ class App extends Component{
                         callback={this.callback.bind(this)}/>
                 </div>
                 <div id="footer">
-                    <FooterComponent/>
+                    <FooterComponent resetTable={this.resetTable}/>
                 </div>
             </>
         );
