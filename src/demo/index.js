@@ -63,21 +63,22 @@ const option = {
     supportAjaxPage: true,
     supportSorting: true,
     supportMoveRow: true,
-    supportTreeData: true,
+    // supportTreeData: true,
     // treeConfig: {
     //     insertTo: 'title',
     //     openState: false,
     //     treeKey: 'children'
     // },
-    // ajaxData: 'http://www.lovejavascript.com/blogManager/getBlogList',
-    ajaxData: ajaxData1,
+    ajaxData: 'http://www.lovejavascript.com/blogManager/getBlogList',
+    // ajaxData: ajaxData1,
     ajaxType: 'POST',
 };
 
-const getEmptyTemplate = (num, testFN) => {
+const getEmptyTemplate = (query, num, testFN) => {
+    const text = query.title ? '这个React表格, 搜索结果为空' : '这个React表格, 数据为空';
     return (
         <>
-            <EmptyTemplate text={'这个React表格, 什么数据也没有' + num} testFN={testFN}/>
+            <EmptyTemplate text={text + num} testFN={testFN}/>
         </>
     );
 };
@@ -186,7 +187,8 @@ class App extends Component{
         super();
         this.state = {
             num: 1,
-            now: Date.now()
+            now: Date.now(),
+            isShow: true
         };
         this.testFN = () => {
             this.setState(state => {
@@ -202,14 +204,12 @@ class App extends Component{
         console.log('callback', Date.now() - this.state.now);
     }
 
-    resetTable() {
-        console.log('resetTable');
+    resetTable(isShow) {
+        this.setState({'isShow': isShow});
     }
     render() {
-        console.log('render render render');
         this.columnData = getColumnData(this.state.num, this.testFN);
         this.topFullColumn = getFullColumn(this.state.num);
-        this.emptyTemplate = getEmptyTemplate(this.state.num, this.testFN);
         const { gridManagerName, option } = this.context;
         return (
             <>
@@ -217,17 +217,24 @@ class App extends Component{
                     <SearchComponent/>
                 </div>
                 <div id="example">
-                    <GridManagerReact
-                        gridManagerName={gridManagerName}
-                        option={option} // 也可以将option中的配置项展开
-                        height={'100%'} // 展开后的参数，会覆盖option中的值
-                        columnData={this.columnData}
-                        // topFullColumn={this.topFullColumn}
-                        emptyTemplate={this.emptyTemplate}
-                        callback={this.callback.bind(this)}/>
+                    {
+                        this.state.isShow ?
+                            <GridManagerReact
+                            gridManagerName={gridManagerName}
+                            option={option} // 也可以将option中的配置项展开
+                            height={'100%'} // 展开后的参数，会覆盖option中的值
+                            columnData={this.columnData}
+                            // topFullColumn={this.topFullColumn}
+                            emptyTemplate={ settings => {
+                                return getEmptyTemplate(settings.query, this.state.num, this.testFN);
+                            }}
+                            callback={this.callback.bind(this)}/>
+                            : ''
+                    }
+
                 </div>
                 <div id="footer">
-                    <FooterComponent resetTable={this.resetTable}/>
+                    <FooterComponent resetTable={this.resetTable.bind(this)}/>
                 </div>
             </>
         );
