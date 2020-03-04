@@ -66,14 +66,19 @@ export default class ReactGridManager extends React.Component {
      * @param isAdd: 是否向增加至缓存列表
      */
     toReact(compileList, isAdd) {
+        const reactCache = this.reactCache;
+        const { isValidElement, cloneElement } = React;
+        const render = ReactDOM.render;
+
         compileList.forEach(item => {
-            const { row, el, template, fnArg = []} = item;
+            let { row, el, template, fnArg = []} = item;
+
             let element = template(...fnArg);
 
             // reactElement
-            if (React.isValidElement(element)) {
+            if (isValidElement(element)) {
                 // 如果当前使用的模块(任何类型的)未使用组件或空标签包裹时，会在生成的DOM节点上生成row=[object Object]
-                element = React.cloneElement(element, {row, index: item.index, ...element.props});
+                element = cloneElement(element, {row, index: item.index, ...element.props});
             }
 
             // string
@@ -91,13 +96,13 @@ export default class ReactGridManager extends React.Component {
                 return;
             }
 
-            ReactDOM.render(
+            render(
                 element,
                 el
             );
 
             // 存储当前展示的React项
-            isAdd && this.reactCache.push({
+            isAdd && reactCache.push({
                 ...item,
                 el
             });
@@ -203,7 +208,7 @@ export default class ReactGridManager extends React.Component {
             this.updateReactCache();
 
             return new Promise(resolve => {
-                this.toReact(compileList, true);
+                this.toReact(compileList,true);
                 resolve();
             });
         };
