@@ -42,7 +42,7 @@ export default class ReactGridManager extends React.Component {
     updateReactCache() {
         this.reactCache = this.reactCache.filter(item => {
             const { el } = item;
-            if (!window.getComputedStyle(el).display) {
+            if (!getComputedStyle(el).display) {
                 // 清除framework.send 后存在操作的DOM节点
                 const tree = el.querySelector('[tree-element]');
                 tree && el.removeChild(tree);
@@ -50,7 +50,7 @@ export default class ReactGridManager extends React.Component {
                 // 移除react node
                 ReactDOM.unmountComponentAtNode(el);
             }
-            return !!window.getComputedStyle(el).display;
+            return !!getComputedStyle(el).display;
         });
     }
 

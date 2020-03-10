@@ -63,6 +63,12 @@ const option = {
     supportAjaxPage: true,
     supportSorting: true,
     supportMoveRow: true,
+    autoOrderConfig: {
+        fixed: 'left'
+    },
+    checkboxConfig: {
+        fixed: 'left'
+    },
     // supportTreeData: true,
     // treeConfig: {
     //     insertTo: 'title',
@@ -171,6 +177,7 @@ const getColumnData = (num, testFN) => {
         remind: 'the action',
         width: '100px',
         disableCustomize: true,
+        fixed: 'right',
         text: <ActionComponents text={'操作' + num}/>,
         template: (action, row, index) => {
             return (
@@ -241,7 +248,7 @@ class App extends Component{
     }
 }
 
-const gridManagerName = 'testReact';
+const gridManagerName = 'test';
 ReactDOM.render(
     <AppContext.Provider value={{gridManagerName, option}}>
         <App/>
