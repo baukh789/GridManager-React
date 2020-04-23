@@ -67,6 +67,7 @@ const option = {
         fixed: 'left'
     },
     checkboxConfig: {
+        useRowCheck: true,
         fixed: 'left'
     },
     // supportTreeData: true,

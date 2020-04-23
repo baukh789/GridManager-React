@@ -51,11 +51,13 @@ export function TypeComponents(props) {
 export function EditComponents(props) {
     const { gmkey, index, row } = props;
     const editAction = () => {
+        // window.event.stopPropagation();
+        // window.event.preventDefault();
         row.title = row.title + '(编辑于' + new Date().toLocaleDateString() +')';
         $gridManager.updateRowData(gmkey, 'id', row);
     };
 
     return (
-        <span className='plugin-action' onClick={editAction} data-index={index} title={row.title}>编辑</span>
+        <span className='plugin-action' onMouseDown={editAction} data-index={index} title={row.title}>编辑</span>
     );
 }
