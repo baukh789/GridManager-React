@@ -178,6 +178,8 @@ const getColumnData = (num, testFN) => {
         remind: 'the action',
         width: '100px',
         disableCustomize: true,
+        disableRowCheck: true,
+        disableMoveRow: true,
         fixed: 'right',
         text: <ActionComponents text={'操作' + num}/>,
         template: (action, row, index) => {

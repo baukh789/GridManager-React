@@ -58,6 +58,6 @@ export function EditComponents(props) {
     };
 
     return (
-        <span className='plugin-action' onMouseDown={editAction} data-index={index} title={row.title}>编辑</span>
+        <span className='plugin-action' onClick={editAction} data-index={index} title={row.title}>编辑</span>
     );
 }
