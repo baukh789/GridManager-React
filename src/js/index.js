@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render, unmountComponentAtNode } from 'react-dom';
 import $gridManager, { jTool } from 'gridmanager';
 import 'gridmanager/css/gm.css';
 
@@ -48,7 +48,7 @@ export default class ReactGridManager extends React.Component {
                 tree && el.removeChild(tree);
 
                 // 移除react node
-                ReactDOM.unmountComponentAtNode(el);
+                unmountComponentAtNode(el);
             }
             return !!getComputedStyle(el).display;
         });
@@ -68,7 +68,6 @@ export default class ReactGridManager extends React.Component {
     toReact(compileList, isAdd) {
         const reactCache = this.reactCache;
         const { isValidElement, cloneElement } = React;
-        const render = ReactDOM.render;
 
         compileList.forEach(item => {
             let { row, el, template, fnArg = []} = item;
@@ -226,7 +225,10 @@ export default class ReactGridManager extends React.Component {
     }
 
     componentWillUnmount() {
-        $gridManager.destroy(this.option.gridManagerName);
+        $gridManager.destroy(this.option.gridManagerName)
+
+        // 由于th td中的 jsx不在codebox内，在销毁时需要手动清除
+        this.updateReactCache();
     }
 }
 
