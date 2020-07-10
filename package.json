@@ -40,7 +40,7 @@
         "webpack-dev-middleware": "^3.7.0"
     },
     "dependencies": {
-        "gridmanager": "^2.12.1",
+        "gridmanager": "^2.12.2",
         "react": "^16.8.6",
         "react-dom": "^16.8.6"
     }
