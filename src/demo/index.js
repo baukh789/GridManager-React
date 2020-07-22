@@ -67,7 +67,7 @@ const option = {
         fixed: 'left'
     },
     checkboxConfig: {
-        useRowCheck: true,
+        // useRowCheck: true,
         fixed: 'left'
     },
     // supportTreeData: true,
@@ -92,7 +92,9 @@ const getEmptyTemplate = (query, num, testFN) => {
 
 const getFullColumn = num => {
     return {
-        template: function () {
+        useFold: true,
+        interval: 6,
+        topTemplate: function () {
             return (
                     <div style={{padding: '12px', textAlign: 'center'}}>
                         快速、灵活的对Table标签进行实例化，让Table标签充满活力。该项目已开源, {num}
@@ -219,7 +221,7 @@ class App extends Component{
     }
     render() {
         this.columnData = getColumnData(this.state.num, this.testFN);
-        this.topFullColumn = getFullColumn(this.state.num);
+        this.fullColumn = getFullColumn(this.state.num);
         const { gridManagerName, option } = this.context;
         return (
             <>
@@ -234,7 +236,7 @@ class App extends Component{
                             option={option} // 也可以将option中的配置项展开
                             height={'100%'} // 展开后的参数，会覆盖option中的值
                             columnData={this.columnData}
-                            // topFullColumn={this.topFullColumn}
+                            fullColumn={this.fullColumn}
                             emptyTemplate={ settings => {
                                 return getEmptyTemplate(settings.query, this.state.num, this.testFN);
                             }}

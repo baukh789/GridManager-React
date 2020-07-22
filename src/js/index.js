@@ -113,7 +113,7 @@ export default class ReactGridManager extends React.Component {
      */
     updateReactTemplate() {
         const settings = $gridManager.get(this.option.gridManagerName);
-        let { columnData, emptyTemplate = settings.emptyTemplate, topFullColumn = settings.topFullColumn } = $gridManager.updateTemplate(this.option);
+        let { columnData, emptyTemplate = settings.emptyTemplate, fullColumn = settings.fullColumn } = $gridManager.updateTemplate(this.option);
 
         const { columnMap } = settings;
 
@@ -124,7 +124,10 @@ export default class ReactGridManager extends React.Component {
         });
 
         // 更新模板: 通栏
-        settings.topFullColumn = topFullColumn;
+        if (settings.__isFullColumn) {
+            settings.fullColumn.topTemplate = fullColumn.topTemplate;
+            settings.fullColumn.bottomTemplate = fullColumn.bottomTemplate;
+        }
 
         // 更新模板: 空
         settings.emptyTemplate = emptyTemplate;
@@ -149,8 +152,12 @@ export default class ReactGridManager extends React.Component {
                 }
 
                 // 通栏
-                case 'full': {
-                    item.template = topFullColumn.template;
+                case 'full-top': {
+                    item.template = fullColumn.topTemplate;
+                    break;
+                }
+                case 'full-bottom': {
+                    item.template = fullColumn.bottomTemplate;
                     break;
                 }
 
