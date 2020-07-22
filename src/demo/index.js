@@ -76,7 +76,7 @@ const option = {
     //     openState: false,
     //     treeKey: 'children'
     // },
-    ajaxData: 'http://www.lovejavascript.com/blogManager/getBlogList',
+    ajaxData: 'https://www.lovejavascript.com/blogManager/getBlogList',
     // ajaxData: ajaxData1,
     ajaxType: 'POST',
 };
