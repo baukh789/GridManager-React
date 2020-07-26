@@ -93,8 +93,8 @@ const getEmptyTemplate = (query, num, testFN) => {
 const getFullColumn = num => {
     return {
         useFold: true,
-        interval: 6,
-        topTemplate: function () {
+        // interval: 6,
+        bottomTemplate: function () {
             return (
                     <div style={{padding: '12px', textAlign: 'center'}}>
                         快速、灵活的对Table标签进行实例化，让Table标签充满活力。该项目已开源, {num}
@@ -236,7 +236,7 @@ class App extends Component{
                             option={option} // 也可以将option中的配置项展开
                             height={'100%'} // 展开后的参数，会覆盖option中的值
                             columnData={this.columnData}
-                            fullColumn={this.fullColumn}
+                            // fullColumn={this.fullColumn}
                             emptyTemplate={ settings => {
                                 return getEmptyTemplate(settings.query, this.state.num, this.testFN);
                             }}
