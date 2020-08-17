@@ -134,6 +134,9 @@ const getColumnData = (num, testFN) => {
         key: 'info',
         text: '简介',
     },{
+        key: 'readNumber',
+        text: '阅读量',
+    },{
         key: 'username',
         remind: 'the username',
         width: '100px',
@@ -211,6 +214,16 @@ class App extends Component{
         };
     }
     static contextType = AppContext;
+    summaryHandler(data) {
+        let readNumber = 0;
+        data.forEach(item => {
+            readNumber += item.readNumber;
+        });
+        return {
+            title: <ActionComponents text={'测试 JSX'}/>,
+            readNumber
+        }
+    }
 
     callback(query) {
         console.log('callback', Date.now() - this.state.now);
@@ -236,6 +249,7 @@ class App extends Component{
                             option={option} // 也可以将option中的配置项展开
                             height={'100%'} // 展开后的参数，会覆盖option中的值
                             columnData={this.columnData}
+                            summaryHandler={this.summaryHandler}
                             // fullColumn={this.fullColumn}
                             emptyTemplate={ settings => {
                                 return getEmptyTemplate(settings.query, this.state.num, this.testFN);
