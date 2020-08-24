@@ -66,6 +66,7 @@ const option = {
     autoOrderConfig: {
         fixed: 'left'
     },
+    isIconFollowText: true,
     checkboxConfig: {
         // useRowCheck: true,
         fixed: 'left'
