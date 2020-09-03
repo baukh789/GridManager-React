@@ -1,6 +1,6 @@
 {
     "name": "gridmanager-react",
-    "version": "1.7.2",
+    "version": "1.7.3",
     "description": "GridManager by React",
     "main": "/js/gm-react",
     "scripts": {
