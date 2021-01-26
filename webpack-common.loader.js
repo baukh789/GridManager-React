@@ -1,8 +1,3 @@
-/**
- * @author  https://github.com/silence717
- * @date on 2017/12/12
- */
-const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = () => {
