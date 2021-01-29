@@ -51,12 +51,6 @@ import ReactGridManager from 'gridmanager-react';
 import 'gridmanager-react/css/gm-react.css';
 ```
 
-- 通过script标签引入
-```html
-<link rel="stylesheet" href="../node_modules/gridmanager-react/css/gm-react.css">
-<script src="../node_modules/gridmanager-react/js/gm-react.js"></script>
-```
-
 ## 示例
 ```html
 <div id="example"></div>
