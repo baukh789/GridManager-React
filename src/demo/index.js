@@ -63,6 +63,7 @@ const option = {
     supportAjaxPage: true,
     supportSorting: true,
     supportMoveRow: true,
+    useCellFocus: true,
     autoOrderConfig: {
         fixed: 'left'
     },
