@@ -232,7 +232,7 @@ export default class ReactGridManager extends React.Component {
     }
 
     componentWillUnmount() {
-        $gridManager.destroy(this.option.gridManagerName)
+        $gridManager.destroy(this.option.gridManagerName);
 
         // 由于th td中的 jsx不在codebox内，在销毁时需要手动清除
         this.updateReactCache();
