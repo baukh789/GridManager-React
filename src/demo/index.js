@@ -59,6 +59,9 @@ const ajaxData1 = {
 };
 const option = {
     disableCache: false,
+    virtualScroll: {
+        useVirtualScroll: true
+    },
     isCombSorting:  true,
     supportAjaxPage: true,
     supportSorting: true,
@@ -251,7 +254,7 @@ class App extends Component{
                             option={option} // 也可以将option中的配置项展开
                             height={'100%'} // 展开后的参数，会覆盖option中的值
                             columnData={this.columnData}
-                            summaryHandler={this.summaryHandler}
+                            // summaryHandler={this.summaryHandler}
                             // fullColumn={this.fullColumn}
                             emptyTemplate={ settings => {
                                 return getEmptyTemplate(settings.query, this.state.num, this.testFN);
