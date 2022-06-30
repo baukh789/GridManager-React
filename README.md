@@ -1,4 +1,4 @@
-# GridManager React[自3.0开始, 该库已与gridmanager合并]
+# GridManager React[自3.0开始, 该库已与[GridManager](https://github.com/baukh789/GridManager)合并]
 > 基于 React 的 GridManager 封装, 用于便捷的在 React 中使用GridManager. 除过React特性外，其它API与GridManager API相同。
 
 ![image](https://s2.ax1x.com/2019/04/16/AxA4xK.png)
